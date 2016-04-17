@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require 'aws-sdk'
+
+## parse github repo
+org, repo, branch = ARGV[0].split(/[\/:]+/)
+
+## format to send to argus
+msg = {
+  org:    org,
+  repo:   repo,
+  branch: branch || 'master'
+}
+
+## send message to sqs
+sqs = Aws::SQS::Client.new
+
+queue_url = sqs.get_queue_url(
+  queue_name: ENV.fetch('ARGUS_QUEUE', 'argus')
+).queue_url
+
+sqs.send_message(
+  queue_url:    queue_url,
+  message_body: msg.to_json
+)
