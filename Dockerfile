@@ -17,10 +17,9 @@ ADD lib/argus/version.rb /app/lib/argus/version.rb
 
 RUN bundle install
 
-ADD worker.rb /app/
-ADD lib       /app/lib
+ADD bin /app/bin
+ADD lib /app/lib
 
-# ADD backup.rb /app/
+ENV ARGUS_QUEUE argus
 
-# ENTRYPOINT ["bundle", "exec", "./backup.rb"]
-CMD ["sh"]
+CMD ["bin/argus-worker"]
