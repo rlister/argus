@@ -6,7 +6,7 @@ Extremely simple ruby daemon to build docker images and push them to
 Features:
 
 - does one thing well (kinda)
-- trigger builds with SQS messages
+- queue builds with SQS messages
 - built-in ECR authentication
 - can notify [Slack](https://slack.com/) of build details
 
