@@ -13,6 +13,10 @@ Features:
 The primary goal of this project is simplicity. It should be easy to
 adapt to your exact image-building needs.
 
+Argus is implemented as a shoryuken
+worker. [Shoryuken](https://github.com/phstc/shoryuken) is a super
+efficient AWS SQS thread based message processor.
+
 ## Quick-start
 
 You will need:
