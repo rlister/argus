@@ -23,7 +23,7 @@ You will need:
   `GITHUB_TOKEN`
 - a repository created on ECR to push the docker image once built
 
-Create an SQS queue called `argus`.
+Create an SQS queue called `argus`, then:
 
 ```
 gem install argus-builder
