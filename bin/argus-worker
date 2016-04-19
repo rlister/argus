@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 exec <<EOF
+  bundle exec \
   shoryuken \
   --require ./lib/argus/worker.rb \
   --queue ${ARGUS_QUEUE:-argus} \
