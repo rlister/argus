@@ -32,6 +32,18 @@ module Argus
       URI.parse(auth.proxy_endpoint).host
     end
 
+    ## return image tag, or make it out of:
+    ## repo:branch with / changed to - in branch;
+    ## prepend registry if none given
+    def image_name(registry, msg)
+      name = msg[:tag] || (msg[:repo] + ':' + msg[:branch].gsub('/', '-'))
+      if name.include?('/')
+        name
+      else
+        "#{registry}/#{name}"
+      end
+    end
+
     def initialize(msg)
       msg = symbolize_keys(msg)
 
@@ -46,7 +58,7 @@ module Argus
       registry = authenticate_ecr
 
       ## docker image to build
-      img = Image.new("#{registry}/#{msg[:repo]}", msg[:branch])
+      img = Image.new(image_name(registry, msg))
 
       Dir.chdir(dir) do
         img.pull              # pull some layers to speed up the build

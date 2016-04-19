@@ -5,9 +5,8 @@ module Argus
   class Image
     attr_reader :repo, :branch, :build_time, :image, :push_time
 
-    def initialize(repo, branch)
-      @repo   = repo
-      @branch = branch
+    def initialize(name)
+      @repo, @branch = name.split(':')
     end
 
     def to_s

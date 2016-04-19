@@ -110,7 +110,8 @@ require 'aws-sdk'
 msg = {
   org:    org,
   repo:   repo,
-  branch: branch
+  branch: branch,
+  tag:    repo:branch # optional
 }
 
 sqs = Aws::SQS::Client.new
@@ -118,6 +119,22 @@ sqs.send_message(
   queue_url:    sqs.get_queue_url(queue_name: myqueue).queue_url,
   message_body: msg.to_json
 )
+```
+
+If no tag is given it will be constructed as
+`registry/repo:branch`. The git branch will have `/` changed to `-` to
+make a legal docker image name.
+
+For example, git repo:
+
+```
+rlister/argus:feature/foo
+```
+
+will produce docker image:
+
+```
+xxx.dkr.ecr.us-east-1.amazonaws.com/argus:feature-foo
 ```
 
 ## Shoryuken options
