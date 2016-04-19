@@ -88,7 +88,7 @@ argus-worker
 ## Build procedure
 
 Argus builds images as follows. Examine and modify `lib/argus/git.rb`
-and `lib/argus/docker.git` to change exact behaviour.
+and `lib/argus/docker.rb` to change exact behaviour.
 
 1. `git clone` a new github repo, or `git checkout` an existing one
 1. authenticate to elastic container registry using provided credentials
@@ -175,7 +175,7 @@ the `.gem` file to [rubygems.org](https://rubygems.org).
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/[USERNAME]/argus. This project is intended to be a
+https://github.com/rlister/argus. This project is intended to be a
 safe, welcoming space for collaboration, and contributors are expected
 to adhere to the
 [Contributor Covenant](http://contributor-covenant.org) code of
