@@ -2,11 +2,11 @@ module Argus
   class Git
     attr_reader :org, :repo, :branch, :sha
 
-    def initialize(org, repo, branch = 'master')
+    def initialize(org, repo, branch = 'master', sha = nil)
       @org    = org
       @repo   = repo
       @branch = branch
-      @sha    = nil
+      @sha    = sha
     end
 
     def to_s
@@ -34,7 +34,8 @@ module Argus
       else
         clone
       end
-      @sha = rev_parse                 # return SHA
+      reset if sha              # specific sha was requested
+      @sha = rev_parse          # return sha
     end
 
     ## checkout branch of an existing repo
@@ -49,6 +50,12 @@ module Argus
       puts "new repo, cloning #{self}"
       %x[git clone -b #{branch} #{url} .] # not found: clone it
       raise ArgusError, "git clone failed for #{self}" unless $? == 0
+    end
+
+    ## get a specific commit
+    def reset
+      puts "specific sha requested, resetting to #{sha}"
+      %x[git fetch && git reset --hard #{sha}]
     end
 
     ## get current sha

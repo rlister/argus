@@ -52,7 +52,7 @@ module Argus
       FileUtils.mkdir_p(dir)
 
       ## github repo to get
-      git = Git.new(msg[:org], msg[:repo], msg[:branch])
+      git = Git.new(msg[:org], msg[:repo], msg[:branch], msg.fetch(:sha, nil))
 
       ## authenticate to registry
       registry = authenticate_ecr
