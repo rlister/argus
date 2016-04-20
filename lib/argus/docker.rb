@@ -34,9 +34,15 @@ module Argus
 
       @build_time = Benchmark.realtime do
         @image = Docker::Image.build_from_dir('.', dockerfile: 'Dockerfile') do |chunk|
-          stream = JSON.parse(chunk)['stream']
-          unless (stream.nil? || stream.match(/^[\s\.]+$/)) # very verbose about build progress
-            puts stream.chomp
+          chunk.split(/[\r\n]+/).each do |line| # latest docker jams multiple streams into chunk
+            begin
+              stream = JSON.parse(line)['stream']
+              unless (stream.nil? || stream.match(/^[\s\.]+$/)) # very verbose about build progress
+                puts stream.chomp
+              end
+            rescue => e         # be robust to json parse errors
+              puts e.message
+            end
           end
         end
       end
