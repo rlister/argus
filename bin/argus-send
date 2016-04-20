@@ -3,7 +3,7 @@
 require 'aws-sdk'
 
 ## parse github repo
-org, repo, branch = ARGV[0].split(/[\/:]+/)
+org, repo, branch = ARGV[0].split(/[\/:]+/, 3)
 
 ## format to send to argus
 msg = {
