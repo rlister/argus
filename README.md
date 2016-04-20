@@ -27,7 +27,13 @@ You will need:
   `GITHUB_TOKEN`
 - a repository created on ECR to push the docker image once built
 
-Create an SQS queue called `argus`, then:
+If you have local docker, you can run a single build with:
+
+```
+argus-build rlister/argus:master
+```
+
+To run the builder daemon, create an SQS queue called `argus`, then:
 
 ```
 gem install argus-builder
