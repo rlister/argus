@@ -68,12 +68,14 @@ module Argus
         img.build!              # build docker image
         raise ArgusError, 'docker build failed' unless img.is_ok?
 
-        notify("build complete for #{img} (#{img.build_time.round}s)", :good)
+        short_sha = git.sha.slice(0,7) # human-readable sha for messages
+
+        notify("build complete for #{img} #{short_sha} (#{img.build_time.round}s)", :good)
 
         img.tag!(git.sha)       # tag the image
         img.push(git.sha)       # push to registry
 
-        notify("push complete for #{img} (#{img.push_time.round}s)", :good)
+        notify("push complete for #{img} #{short_sha} (#{img.push_time.round}s)", :good)
       end
     rescue ArgusError => e
       notify(e.message, :danger)
