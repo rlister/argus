@@ -2,28 +2,38 @@
 ## run a single argus build directly
 
 require 'argus'
+require 'optparse'
 
-usage = 'argus-build org/repo:branch [sha]'
+USAGE = 'argus-build org/repo:branch'
 
-if ARGV.empty?
-  puts "Usage: #{usage}"
-  exit
-end
-
-## parse github repo
-org, repo, branch = ARGV[0].split(/[\/:]+/, 3)
-sha = ARGV[1] || nil
-
-## incoming message from sqs
+## msg to send to argus runner
 msg = {
-  org:    org,
-  repo:   repo,
-  branch: branch,
-  sha:    sha
+  build_options: {}
 }
 
+OptionParser.new do |opts|
+  opts.banner = USAGE
+
+  opts.on('-s', '--sha SHA', 'Git SHA to build') do |s|
+    msg[:sha] = s
+  end
+
+  opts.on('-d', '--dockerfile FILENAME', 'Name of Dockerfile') do |d|
+    msg[:build_options][:dockerfile] = d
+  end
+
+  opts.on('-n', '--no-cache', 'Invalidate docker build cache') do |n|
+    msg[:build_options][:nocache] = true
+  end
+end.parse!
+
+abort("Usage: #{USAGE}") if ARGV.empty?
+
+## parse github repo
+msg[:org], msg[:repo], msg[:branch] = ARGV[0].split(/[\/:]+/, 3)
+
 ## prevent timeout on docker api operations (e.g. long bundle install during build)
-Excon.defaults[:write_timeout] = ENV.fetch('DOCKER_WRITE_TIMEOUT', 1000)
-Excon.defaults[:read_timeout]  = ENV.fetch('DOCKER_READ_TIMEOUT',  1000)
+Excon.defaults[:write_timeout] = ENV.fetch('DOCKER_WRITE_TIMEOUT', 10000)
+Excon.defaults[:read_timeout]  = ENV.fetch('DOCKER_READ_TIMEOUT',  10000)
 
 Argus::Runner.new(msg)

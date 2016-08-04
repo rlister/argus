@@ -28,12 +28,12 @@ module Argus
       end
     end
 
-    ## build docker image
-    def build!
+    ## build docker image, with optional API /build params
+    def build!(options = {})
       puts "building #{self}"
 
       @build_time = Benchmark.realtime do
-        @image = Docker::Image.build_from_dir('.', dockerfile: 'Dockerfile') do |chunk|
+        @image = Docker::Image.build_from_dir('.', options) do |chunk|
           chunk.split(/[\r\n]+/).each do |line| # latest docker jams multiple streams into chunk
             begin
               stream = JSON.parse(line)['stream']
