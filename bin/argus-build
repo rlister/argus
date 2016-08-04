@@ -23,7 +23,7 @@ msg = {
 }
 
 ## prevent timeout on docker api operations (e.g. long bundle install during build)
-Excon.defaults[:write_timeout] = ENV.fetch('DOCKER_WRITE_TIMEOUT', 1000)
-Excon.defaults[:read_timeout]  = ENV.fetch('DOCKER_READ_TIMEOUT',  1000)
+Excon.defaults[:write_timeout] = ENV.fetch('DOCKER_WRITE_TIMEOUT', 10000)
+Excon.defaults[:read_timeout]  = ENV.fetch('DOCKER_READ_TIMEOUT',  10000)
 
 Argus::Runner.new(msg)
