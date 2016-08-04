@@ -116,8 +116,8 @@ require 'aws-sdk'
 msg = {
   org:    org,
   repo:   repo,
-  branch: branch,
-  tag:    repo:branch # optional
+  branch: branch,     # optional, defaults to master
+  tag:    repo:branch # optional. defaults to repo:branch
 }
 
 sqs = Aws::SQS::Client.new

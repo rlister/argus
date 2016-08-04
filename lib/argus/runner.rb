@@ -46,6 +46,8 @@ module Argus
 
     def initialize(msg)
       msg = symbolize_keys(msg)
+      ## set default
+      msg[:branch] ||= 'master'
 
       ## make working directory
       dir = File.join(ENV.fetch('ARGUS_HOME', '/tmp'), msg[:org], msg[:repo])
