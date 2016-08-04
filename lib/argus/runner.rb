@@ -46,6 +46,8 @@ module Argus
 
     def initialize(msg)
       msg = symbolize_keys(msg)
+      puts "Received message: #{msg}"
+
       ## set default
       msg[:branch] ||= 'master'
 
