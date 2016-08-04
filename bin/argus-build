@@ -31,6 +31,7 @@ abort("Usage: #{USAGE}") if ARGV.empty?
 
 ## parse github repo
 msg[:org], msg[:repo], msg[:branch] = ARGV[0].split(/[\/:]+/, 3)
+msg.reject! { |_,v| v.nil? }
 
 ## prevent timeout on docker api operations (e.g. long bundle install during build)
 Excon.defaults[:write_timeout] = ENV.fetch('DOCKER_WRITE_TIMEOUT', 10000)
