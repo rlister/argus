@@ -65,7 +65,8 @@ module Argus
         git.pull              # get the git repo
         raise ArgusError, "git sha not found: #{git}" unless git.sha
 
-        img.build!              # build docker image
+        options = msg.fetch(:build_options, {})
+        img.build!(options) # build docker image
         raise ArgusError, 'docker build failed' unless img.is_ok?
 
         short_sha = git.sha.slice(0,7) # human-readable sha for messages
