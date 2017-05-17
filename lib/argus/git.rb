@@ -56,6 +56,7 @@ module Argus
     def reset
       puts "specific sha requested, resetting to #{sha}"
       %x[git fetch && git reset --hard #{sha}]
+      raise ArgusError, "git reset #{sha} failed for #{self}" unless $? == 0
     end
 
     ## get current sha
