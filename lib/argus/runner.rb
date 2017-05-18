@@ -3,6 +3,8 @@ require 'base64'
 
 module Argus
   class Runner
+    include Ecr
+
     ## override notifier if setup for Slack ...
     prepend SlackNotifier if ENV.has_key?('SLACK_WEBHOOK')
 
@@ -13,23 +15,6 @@ module Argus
 
     def symbolize_keys(hash)
       Hash[ hash.map { |k,v| [ k.to_sym, v ] }]
-    end
-
-    ## authenticate to AWS ECR
-    def authenticate_ecr
-      ## get token and extract creds
-      auth = Aws::ECR::Client.new.get_authorization_token.authorization_data.first
-      username, password = Base64.decode64(auth.authorization_token).split(':')
-
-      ## authenticate our docker client
-      Docker.authenticate!(
-        username:      username,
-        password:      password,
-        serveraddress: auth.proxy_endpoint
-      )
-
-      ## return registry name
-      URI.parse(auth.proxy_endpoint).host
     end
 
     ## return image tag, or make it out of:
@@ -79,8 +64,12 @@ module Argus
 
         img.tag!(git.sha)       # tag the image
         img.push(git.sha)       # push to registry
-
         notify("push complete for #{img} #{short_sha} (#{img.push_time.round}s)", :good)
+      end
+
+      ## ensure image is in ECR with all tags
+      img.image.info['RepoTags'].each do |rtag|
+        ecr_exists?(rtag) or raise ArgusError, "Not found in ECR: #{rtag}"
       end
     rescue ArgusError => e
       notify(e.message, :danger)
