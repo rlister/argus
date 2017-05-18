@@ -20,9 +20,9 @@ module Argus
         begin
           attempt = Docker::Image.create(fromImage: "#{repo}:#{tag}")
         rescue Docker::Error::ArgumentError
-          puts "failed pull"
+          puts "failed pull: #{repo}:#{tag}"
         rescue Docker::Error::NotFoundError
-          puts "image not found"
+          puts "image not found: #{repo}:#{tag}"
         end
         break if attempt.is_a?(Docker::Image)
       end
