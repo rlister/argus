@@ -53,7 +53,7 @@ module Argus
       image.is_a?(Docker::Image)
     end
 
-    ## tag with both sha and branch
+    ## apply tags to image for sha and branch name
     def tag!(sha)
       [sha, branch].map do |tag|
         puts "tagging #{repo}:#{tag}"
