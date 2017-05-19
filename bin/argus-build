@@ -25,6 +25,10 @@ OptionParser.new do |opts|
   opts.on('-n', '--no-cache', 'Invalidate docker build cache') do |n|
     msg[:build_options][:nocache] = true
   end
+
+  opts.on('-q', '--sqs QUEUE', 'SQS queue to send msg after push') do |q|
+    msg[:sqs] = q
+  end
 end.parse!
 
 abort("Usage: #{USAGE}") if ARGV.empty?

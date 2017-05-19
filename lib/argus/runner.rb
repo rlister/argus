@@ -3,7 +3,7 @@ require 'base64'
 
 module Argus
   class Runner
-    include Ecr
+    include Ecr, Sqs
 
     ## override notifier if setup for Slack ...
     prepend SlackNotifier if ENV.has_key?('SLACK_WEBHOOK')
@@ -71,6 +71,9 @@ module Argus
       img.image.info['RepoTags'].each do |rtag|
         ecr_exists?(rtag) or raise ArgusError, "Not found in ECR: #{rtag}"
       end
+
+      ## send msg on to SQS if requested
+      sqs_send(msg) if msg[:sqs]
     rescue ArgusError => e
       notify(e.message, :danger)
       raise # re-raise for shoryuken to delete failed job
