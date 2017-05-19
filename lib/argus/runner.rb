@@ -65,17 +65,17 @@ module Argus
         img.tag!(git.sha)       # tag the image
         img.push(git.sha)       # push to registry
         notify("push complete for #{img} #{short_sha} (#{img.push_time.round}s)", :good)
-      end
 
-      ## ensure image is in ECR with all tags
-      img.image.info['RepoTags'].each do |rtag|
-        ecr_exists?(rtag) or raise ArgusError, "Not found in ECR: #{rtag}"
-      end
+        ## ensure image is in ECR with all tags
+        img.image.info['RepoTags'].each do |rtag|
+          ecr_exists?(rtag) or raise ArgusError, "Not found in ECR: #{rtag}"
+        end
 
-      ## send msg on to SQS if requested
-      if msg[:sqs]
-        sqs_send(msg)
-        notify("sent #{img} #{short_sha} to #{msg[:sqs]}")
+        ## send msg on to SQS if requested
+        if msg[:sqs]
+          sqs_send(msg)
+          notify("sent #{img} #{short_sha} to #{msg[:sqs]}")
+        end
       end
     rescue ArgusError => e
       notify(e.message, :danger)
