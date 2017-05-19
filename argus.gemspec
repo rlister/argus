@@ -22,6 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
 
   spec.add_dependency('aws-sdk', '>= 2.2.20')
-  spec.add_dependency('shoryuken')
+  spec.add_dependency('shoryuken', '>= 3.0.7')
   spec.add_dependency('docker-api')
 end

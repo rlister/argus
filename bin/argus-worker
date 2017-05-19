@@ -3,7 +3,8 @@
 exec <<EOF
   bundle exec \
   shoryuken \
+  start \
   --require ./lib/argus/worker.rb \
-  --queue ${ARGUS_QUEUE:-argus} \
+  --queues ${ARGUS_QUEUE:-argus} \
   --concurrency 1
 EOF
