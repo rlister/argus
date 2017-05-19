@@ -73,7 +73,10 @@ module Argus
       end
 
       ## send msg on to SQS if requested
-      sqs_send(msg) if msg[:sqs]
+      if msg[:sqs]
+        sqs_send(msg)
+        notify("sent #{img} #{short_sha} to #{msg[:sqs]}")
+      end
     rescue ArgusError => e
       notify(e.message, :danger)
       raise # re-raise for shoryuken to delete failed job
