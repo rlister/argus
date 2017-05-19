@@ -16,13 +16,13 @@ module Argus
     ## make a heroic attempt to pre-load as many layers as we can
     def pull
       [branch, :master, :latest].each do |tag|
-        puts "Attempting to pull #{repo}:#{tag}"
+        puts "Attempting to docker pull #{repo}:#{tag}"
         begin
           attempt = Docker::Image.create(fromImage: "#{repo}:#{tag}")
         rescue Docker::Error::ArgumentError
-          puts "failed pull: #{repo}:#{tag}"
+          puts "Failed docker pull: #{repo}:#{tag}"
         rescue Docker::Error::NotFoundError
-          puts "image not found: #{repo}:#{tag}"
+          puts "Docker image not found: #{repo}:#{tag}"
         end
         break if attempt.is_a?(Docker::Image)
       end
@@ -30,7 +30,7 @@ module Argus
 
     ## build docker image, with optional API /build params
     def build!(options = {})
-      puts "building #{self}"
+      puts "Docker build #{self}"
 
       @build_time = Benchmark.realtime do
         @image = Docker::Image.build_from_dir('.', options) do |chunk|
@@ -56,7 +56,7 @@ module Argus
     ## apply tags to image for sha and branch name
     def tag!(sha)
       [sha, branch].map do |tag|
-        puts "tagging #{repo}:#{tag}"
+        puts "Tagging #{repo}:#{tag}"
         image.tag(repo: repo, tag: tag, force: true)
       end
     end
@@ -65,7 +65,7 @@ module Argus
     def push(sha)
       @push_time = Benchmark.realtime do
         [sha, branch].each do |tag|
-          puts "pushing #{repo}:#{tag}"
+          puts "Pushing #{repo}:#{tag}"
           image.push(nil, tag: tag)
         end
       end
