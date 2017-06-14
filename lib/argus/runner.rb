@@ -3,7 +3,7 @@ require 'base64'
 
 module Argus
   class Runner
-    include Ecr, Sqs
+    include Ecr, Sqs, Lambda
 
     ## override notifier if setup for Slack ...
     prepend SlackNotifier if ENV.has_key?('SLACK_WEBHOOK')
@@ -75,6 +75,12 @@ module Argus
         if msg[:sqs]
           sqs_send(msg)
           notify("sent #{img} #{short_sha} to #{msg[:sqs]}")
+        end
+
+        ## invoke any listed lambda functions
+        Array(msg.fetch(:lambda, nil)).each do |function|
+          lambda_invoke(function, msg)
+          notify("invoked #{function} for #{img} #{short_sha}")
         end
       end
     rescue ArgusError => e

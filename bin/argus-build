@@ -29,6 +29,10 @@ OptionParser.new do |opts|
   opts.on('-q', '--sqs QUEUE', 'SQS queue to send msg after push') do |q|
     msg[:sqs] = q
   end
+
+  opts.on('-l', '--lambda FUNCTION', 'Lambda function to invoke after push') do |l|
+    msg[:lambda] = l
+  end
 end.parse!
 
 abort("Usage: #{USAGE}") if ARGV.empty?
